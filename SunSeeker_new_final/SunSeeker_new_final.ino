@@ -9,26 +9,6 @@ int servoRelayOn = 6;
 int servoRelayState = 11;
 int piLed = 13;    //Pi light level led
 
-int getSunLevel() {
-    int lowLightCutoff = 600;
-    int highLightCutoff = 700;
-    //average all four photo sensor values over time
-    int sensorAvg = (digitalRead(photoPinLeft) + digitalRead(photoPinRight) + digitalRead(photoPinTop) + digitalRead(photoPinBottom)) / 4;
-    int total = 0;
-    for (int i = 0; i < 10; i++) {
-      total += sensorAvg;
-      }
-    int avgPhotoLevel = total / 10;
-    //Serial.println(avgPhotoLevel);
-    if (avgPhotoLevel <= lowLightCutoff ) {
-      return 0;
-    } else if (avgPhotoLevel > lowLightCutoff && avgPhotoLevel < highLightCutoff) {
-      return 1;
-    } else {
-      return 2;  
-    } 
-    
-}
 
 class Seeker {
   public: 
@@ -65,7 +45,28 @@ class Seeker {
     servo.detach();
   }
   
-  void Update(int pin1, int pin2) {
+  int getSunLevel() {
+    int lowLightCutoff = 600;
+    int highLightCutoff = 700;
+    //average all four photo sensor values over time
+    int sensorAvg = (digitalRead(photoPinLeft) + digitalRead(photoPinRight) + digitalRead(photoPinTop) + digitalRead(photoPinBottom)) / 4;
+    int total = 0;
+    for (int i = 0; i < 10; i++) {
+      total += sensorAvg;
+      }
+    int avgPhotoLevel = total / 10;
+    //Serial.println(avgPhotoLevel);
+    if (avgPhotoLevel <= lowLightCutoff ) {
+      return 0;
+    } else if (avgPhotoLevel > lowLightCutoff && avgPhotoLevel < highLightCutoff) {
+      return 1;
+    } else {
+      return 2;  
+    } 
+    
+   }
+  
+   void Update(int pin1, int pin2) {
     
     int sunLevel = getSunLevel();
     val1 = analogRead(pin1);  
